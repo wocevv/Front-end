@@ -9,6 +9,7 @@
     let ShowWhatData = ""
     let GroupBy = ""
     let Datarange = ""
+    let ChosenGraph = ""
    const widgets = ref([])
     export default {
 
@@ -76,20 +77,25 @@
         <button @click="test = !test">+</button>
 
         <div v-if="!test">
-            <img @click="Datamodel = 'line-chart'" src="../../src/images/line-chart.png" width="240" height="128" />
-            <img @click="Datamodel = 'bar-chart'" src="../../src/images/barchart.jpg" width="240" height="128" />
+            <img @click="ChosenGraph = 'line-chart'" src="../../src/images/line-chart.png" width="240" height="128" />
+            <img @click="ChosenGraph = 'bar-chart'" src="../../src/images/barchart.jpg" width="240" height="128" />
             <br />
-            <select name="category" id="category" v-model="ShowWhatData">
-                <option disabled selected hidden value="">Please enter a gym</option>
+            <select name="category" id="category" v-model="Datamodel">
+                <option disabled selected hidden value=""> Please choose what Datamodel u want to use</option>
                 <option v-for="item in listItems">{{item}}</option>
             </select>
             <br />
             <select name="category" id="category" v-model="GroupBy">
-                <option disabled selected hidden value="">Please choose a category</option>
+                <option disabled selected hidden value="">Please choose what u want to sort by</option>
                 <option>Day</option>
                 <option>Week</option>
                 <option>Month</option>
                 <option>Year</option>
+            </select>
+            <br />
+            <select name="category" id="category" v-model="ShowWhatData">
+                <option disabled selected hidden value="">Please choose what kinf of data u want to visualise</option>
+                <option>Count</option>
             </select>
             <br />
             <button @click="SetWidgetConfig()">AddWidget</button>
