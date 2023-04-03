@@ -3,15 +3,16 @@
     let myString = "";
     import linegraph from '../../src/components/Linegraph.vue'
     import bargraph from '../../src/components/Barchart.vue'
+
     import router from '@/router'
-    import { defineComponent, ref, watchEffect } from 'vue'
+    import { defineComponent, ref, watchEffect, computed } from 'vue'
     let Datamodel = ""
     let ShowWhatData = ""
     let GroupBy = ""
     let Datarange = ""
    const widgets = ref([])
     export default {
-
+        name: 'Datepicker',
             components: {
             linegraph,
             bargraph
@@ -36,7 +37,7 @@
         mounted() {
             this.getData()
         },
-
+        
         props: {
             selectedOption: {
                 type: String,
@@ -54,6 +55,25 @@
             if (props.selectedChart === null ) {
                 selectedChart = 'undefined'
             }
+        },
+        setup() {
+            const startDate = ref('');
+            const endDate = ref('');
+
+            const minDate = computed(() => {
+                return '2023-04-03'; // set the minimum date to April 3, 2023
+            });
+
+            const maxDate = computed(() => {
+                return '2023-04-10'; // set the maximum date to April 10, 2023
+            });
+
+            return {
+                startDate,
+                endDate,
+                minDate,
+                maxDate
+            };
         }
     }
 
@@ -95,7 +115,11 @@
             <button @click="SetWidgetConfig()">AddWidget</button>
         </div>
         <div>
-
+            <label for="start-date">Start Date:</label>
+            <input type="date" id="start-date" v-model="startDate" :min="minDate" :max="maxDate">
+            <br>
+            <label for="end-date">End Date:</label>
+            <input type="date" id="end-date" v-model="endDate" :min="minDate" :max="maxDate">
         </div>
     </div>
 
