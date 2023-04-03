@@ -13,7 +13,8 @@
     let ChosenGraph = ""
     let StartDate = ""
     let EndDate = ""
-   const widgets = ref([])
+    const widgets = ref([])
+
     export default {
         name: 'Datepicker',
             components: {
@@ -23,6 +24,8 @@
         data() {
             return {
                 test: true,
+                lineChartActive: false,
+                barChartActive: false,
                 listItems: []
             }
         },
@@ -91,19 +94,19 @@
         console.log(widgets)
         // widgets.push()
     }
-    
+
 </script>
 
 <template>
     <div>
-        <button @click="test = !test">+</button>
+        <button v-if="test" @click="test = !test">+</button>
         
-        <div v-if="!test">           
-            <img @click="ChosenGraph = 'line-chart'" src="../../src/images/line-chart.png" width="240" height="128" />
-            <img @click="ChosenGraph = 'bar-chart'" src="../../src/images/barchart.jpg" width="240" height="128" />
-            <div v-if="ChosenGraph !== '' ">
-                <h1>test</h1>
-            </div>
+        <div v-if="!test">
+            <img id="my-image" @click="ChosenGraph = 'line-chart'; lineChartActive = true; barChartActive = false"
+                 :class="{ 'active': lineChartActive }" src="../../src/images/line-chart.png" width="240" height="128" />
+
+            <img @click="ChosenGraph = 'bar-chart'; barChartActive = true; lineChartActive = false"
+                 :class="{ 'active': barChartActive }" src="../../src/images/barchart.jpg" width="240" height="128" />
             <br />
             <select name="category" id="category" v-model="Datamodel">
                 <option disabled selected hidden value=""> Please choose what Datamodel u want to use</option>
@@ -128,8 +131,9 @@
                 <option disabled selected hidden value="">Please choose what kind of data u want to visualise</option>
                 <option>Count</option>
             </select>
-            <br />
+            <br /><br />
             <button @click="SetWidgetConfig()">AddWidget</button>
+            <button @click="test = !test">Cancel</button>
         </div>
     </div>
 
@@ -142,3 +146,9 @@
         <bargraph :my-string="selectedOption"></bargraph>
     </div>
 </template>
+
+<style scoped>
+    .active {
+        border: 2px solid red;
+    }
+</style>
