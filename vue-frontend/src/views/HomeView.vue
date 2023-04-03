@@ -121,6 +121,7 @@
             <label for="end-date">End Date:</label>
             <input type="date" id="end-date" v-model="endDate" :min="minDate" :max="maxDate">
         </div>
+
     </div>
 
     <div v-if="selectedChart === 'line-chart'">
