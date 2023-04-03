@@ -1,0 +1,50 @@
+@import './base.css';
+
+#app {
+  width: 1363px;
+  height: 850px;
+  margin: 0 auto;
+  padding: 2rem;
+
+  font-weight: normal;
+}
+
+a,
+.green {
+  text-decoration: none;
+  color: hsla(160, 100%, 37%, 1);
+  transition: 0.4s;
+}
+
+@media (min-width: 1024px) {
+
+  .navbar {
+    background-color: rgb(30,30,30);
+    display: flex;
+    justify-content: center;
+
+  }
+    .navbar a {
+        float: left;
+        color: rgb(132,162,244);
+        text-align: center;
+        padding: 20px 16px;
+        font-size: 15px;
+    }
+
+        .navbar a:hover {
+            color: rgb(255 212 220);
+        }
+
+            .navbar a:active {
+                background-color: rgb(132,162,244);
+                color: rgb(230, 226, 226);
+            }
+
+    #app {
+        display: grid;
+        place-items: center;
+    }
+
+
+}
