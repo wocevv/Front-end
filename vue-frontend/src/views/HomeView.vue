@@ -4,6 +4,12 @@
     import linegraph from '../../src/components/Linegraph.vue'
     import bargraph from '../../src/components/Barchart.vue'
     import router from '@/router'
+    import { defineComponent, ref, watchEffect } from 'vue'
+    let Datamodel = ""
+    let ShowWhatData = ""
+    let GroupBy = ""
+    let Datarange = ""
+   const widgets = ref([])
     export default {
 
             components: {
@@ -13,13 +19,22 @@
         data() {
             return {
                 test: true,
+                listItems: []
             }
         },
-            methods: {
+        methods: {
+            async getData() {
+                const res = await fetch("https://localhost:5001/api/widget/category");
+                const finalRes = await res.json();
+                this.listItems = finalRes;
+            },
             Gonext(id) {
                 myString = id   
                 router.push({ name: 'test', params: { myString } })             
             }
+        },
+        mounted() {
+            this.getData()
         },
 
         props: {
@@ -41,11 +56,18 @@
             }
         }
     }
+
+
 </script>
 
 <script setup>
 
-
+    function SetWidgetConfig() {
+        const temp = ref([Datamodel, ShowWhatData, GroupBy])
+        widgets.value.push(temp.value)
+        console.log(widgets)
+        // widgets.push()
+    }
     
 </script>
 
@@ -54,8 +76,26 @@
         <button @click="test = !test">+</button>
 
         <div v-if="!test">
-            <img @click="Gonext('line-chart')" src="../../src/images/line-chart.png" width="240" height="128" />
-            <img @click="Gonext('bar-chart')" src="../../src/images/barchart.jpg" width="240" height="128" />
+            <img @click="Datamodel = 'line-chart'" src="../../src/images/line-chart.png" width="240" height="128" />
+            <img @click="Datamodel = 'bar-chart'" src="../../src/images/barchart.jpg" width="240" height="128" />
+            <br />
+            <select name="category" id="category" v-model="ShowWhatData">
+                <option disabled selected hidden value="">Please enter a gym</option>
+                <option v-for="item in listItems">{{item}}</option>
+            </select>
+            <br />
+            <select name="category" id="category" v-model="GroupBy">
+                <option disabled selected hidden value="">Please choose a category</option>
+                <option>Day</option>
+                <option>Week</option>
+                <option>Month</option>
+                <option>Year</option>
+            </select>
+            <br />
+            <button @click="SetWidgetConfig()">AddWidget</button>
+        </div>
+        <div>
+
         </div>
     </div>
 
