@@ -3,6 +3,7 @@
     let myString = "";
     import linegraph from '../../src/components/Linegraph.vue'
     import bargraph from '../../src/components/Barchart.vue'
+    import bargraphtest from '../../src/components/Bargraph.vue'
 
     import router from '@/router'
     import { defineComponent, ref, watchEffect, computed } from 'vue'
@@ -98,7 +99,7 @@
 </script>
 
 <template>
-
+    <bargraphtest></bargraphtest>
     <div>
         <button v-if="test" @click="test = !test">+</button>
 

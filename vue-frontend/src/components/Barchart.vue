@@ -127,7 +127,7 @@
             if (props.myString === 'Laptops') {
                 const data = ref([])
                 const fetchData = async () => {
-                    const res = await fetch("https://localhost:5001/api/widget/category")
+                    const res = await fetch("https://localhost:5001/api/widget/ProductCount")
                     const finalRes = await res.json()
                     const laptopData = finalRes.map((value) => {
                         generateRandomNumber()
