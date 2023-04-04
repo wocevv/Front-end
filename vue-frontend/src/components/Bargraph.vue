@@ -6,11 +6,13 @@
 
 <script>
     import { Bar } from 'vue-chartjs'
-    import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
+    import { Chart as ChartJS, Colors, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
 
     ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+    ChartJS.register(Colors)
 
-    const apiFetch = await fetch('https://localhost:5001/api/Widget/test2');
+
+    const apiFetch = await fetch('https://localhost:5001/api/Widget/ProductCountTest');
     const jsonApiFetch = await apiFetch.json();
 
     const labelArray = []
@@ -28,10 +30,14 @@
             return {
                 chartData: {
                     labels: labelArray,
-                    datasets: [{ data: dataArray }]
+                    datasets: [{
+                        data: dataArray,
+                        label: 'Yo Homies'
+                    }]
                 },
                 chartOptions: {
-                    responsive: true
+                    responsive: true,
+
                 }
             }
         }
