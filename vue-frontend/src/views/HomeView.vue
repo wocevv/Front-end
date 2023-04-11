@@ -154,7 +154,6 @@
         <div>{{selectedOption}}</div>
         <bargraph :my-string="selectedOption"></bargraph>
     </div>
-    <button>s</button>
 </template>
 
 <style scoped>
