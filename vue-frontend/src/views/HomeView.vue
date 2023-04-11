@@ -8,6 +8,7 @@
 
     import router from '@/router'
     import { defineComponent, ref, watchEffect, computed } from 'vue'
+    let widgetdata = []
     let Datamodel = ""
     let ShowWhatData = ""
     let GroupBy = ""
@@ -16,6 +17,7 @@
     let StartDate = ""
     let EndDate = ""
     const widgets = ref([])
+
 
     export default {
         name: 'Datepicker',
@@ -102,8 +104,8 @@
         const queryParams = new URLSearchParams(requestData);
         axios.post(`https://localhost:5001/api/widget/ProductCount?${queryParams.toString()}`)
             .then((response) => {
-                this.response = response.data;
-                console.log(response.data);
+                widgetdata = response.data;
+                console.log(widgetdata);
             }).catch((error) => {
                 console.error(error);
             });
