@@ -98,7 +98,6 @@
 </script>
 
 <template>
-
     <div>
         <button v-if="test" @click="test = !test">+</button>
 
@@ -145,6 +144,14 @@
             </div>
         </div>
     </div>
+
+        <table class="grid">
+            <tbody>
+                <tr v-for="row in 3" :key="row">
+                    <td v-for="col in 3" :key="col"><img src="../../src/images/barchart.jpg"/></td>
+                </tr>
+            </tbody>
+        </table>
     <div v-if="selectedChart === 'line-chart'">
         <div>{{selectedOption}}</div>
         <linegraph :my-string="selectedOption"></linegraph>
@@ -153,10 +160,21 @@
         <div>{{selectedOption}}</div>
         <bargraph :my-string="selectedOption"></bargraph>
     </div>
-    <button>s</button>
 </template>
 
 <style scoped>
+    .grid {
+        width: 100%;
+        height: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+    }
+
+        .grid td {
+            border: 1px solid black;
+            padding: 10px;
+        }
+
     .active {
         border: 2px solid red;
     }
