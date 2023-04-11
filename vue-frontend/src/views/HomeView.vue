@@ -4,6 +4,7 @@
     import linegraph from '../../src/components/Linegraph.vue'
     import bargraph from '../../src/components/Barchart.vue'
     import bargraphtest from '../../src/components/Bargraph.vue'
+    import axios from 'axios';
 
     import router from '@/router'
     import { defineComponent, ref, watchEffect, computed } from 'vue'
@@ -39,7 +40,7 @@
             Gonext(id) {
                 myString = id   
                 router.push({ name: 'test', params: { myString } })             
-            }
+            },
         },
         mounted() {
             this.getData()
@@ -90,8 +91,22 @@
 <script setup>
 
     function SetWidgetConfig() {
-        const temp = ref([ChosenGraph, Datamodel, ShowWhatData, GroupBy, StartDate, EndDate])
-        widgets.value.push(temp.value)
+        const requestData = {
+            GraphType: ChosenGraph,
+            dataModel: Datamodel,
+            dataType: ShowWhatData,
+            dateGrouper: GroupBy,
+            DateStart: StartDate,
+            DateEnd: EndDate,
+        };
+        widgets.value.push(requestData.value)
+        axios.post('https://localhost:5001/api/widget/ProductCount', requestData)
+            .then((response) => {
+            this.response = response.data;
+            console.log(response.data);
+        }).catch((error) => {
+            console.error(error);
+        });
         console.log(widgets)
         // widgets.push()
     }
