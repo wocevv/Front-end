@@ -99,16 +99,14 @@
             DateStart: StartDate,
             DateEnd: EndDate,
         };
-        widgets.value.push(requestData.value)
-        axios.post('https://localhost:5001/api/widget/ProductCount', requestData)
+        const queryParams = new URLSearchParams(requestData);
+        axios.post(`https://localhost:5001/api/widget/ProductCount?${queryParams.toString()}`)
             .then((response) => {
-            this.response = response.data;
-            console.log(response.data);
-        }).catch((error) => {
-            console.error(error);
-        });
-        console.log(widgets)
-        // widgets.push()
+                this.response = response.data;
+                console.log(response.data);
+            }).catch((error) => {
+                console.error(error);
+            });
     }
 
 </script>
