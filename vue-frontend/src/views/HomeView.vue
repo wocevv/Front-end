@@ -8,7 +8,7 @@
 
     import router from '@/router'
     import { defineComponent, ref, watchEffect, computed } from 'vue'
-    let widgetdata = []
+    const widgetdata = ref([])
     let Datamodel = ""
     let ShowWhatData = ""
     let GroupBy = ""
@@ -30,7 +30,8 @@
                 test: true,
                 lineChartActive: false,
                 barChartActive: false,
-                listItems: []
+                listItems: [],
+                widgetdata: []
             }
         },
         methods: {
@@ -56,7 +57,8 @@
             selectedChart: {
                 type: String,
                 required: true
-            }
+            },
+
         },
         setup(props) {
             if (props.selectedOption === null ) {
@@ -104,7 +106,7 @@
         const queryParams = new URLSearchParams(requestData);
         axios.post(`https://localhost:5001/api/widget/ProductCount?${queryParams.toString()}`)
             .then((response) => {
-                widgetdata = response.data;
+                widgetdata.value = response.data;
                 console.log(widgetdata);
             }).catch((error) => {
                 console.error(error);
@@ -114,7 +116,10 @@
 </script>
 
 <template>
-    <bargraphtest></bargraphtest>
+    <div v-if="widgetdata.length">
+        <div>{{selectedOption}}</div>
+        <bargraphtest :widgetdata="widgetdata"></bargraphtest>
+    </div>
     <div>
         <button v-if="test" @click="test = !test">+</button>
 
@@ -161,14 +166,7 @@
             </div>
         </div>
     </div>
-    <div v-if="selectedChart === 'line-chart'">
-        <div>{{selectedOption}}</div>
-        <linegraph :my-string="selectedOption"></linegraph>
-    </div>
-    <div v-if="selectedChart === 'bar-chart'">
-        <div>{{selectedOption}}</div>
-        <bargraph :my-string="selectedOption"></bargraph>
-    </div>
+
 </template>
 
 <style scoped>
