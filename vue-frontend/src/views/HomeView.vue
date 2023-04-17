@@ -151,8 +151,8 @@
                             <option>Count</option>
                         </select>
                         <br /><br />
-                        <button @click="test = !test; SetWidgetConfig()">AddWidget</button>
-                        <button @click="test = !test">Cancel</button>
+                        <button @click="addclicked = !addclicked; SetWidgetConfig()">AddWidget</button>
+                        <button @click="addclicked = !addclicked">Cancel</button>
                     </div>
                 </div>
             </div>
