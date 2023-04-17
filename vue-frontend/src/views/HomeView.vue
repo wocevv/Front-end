@@ -108,10 +108,19 @@
 </script>
 
 <template>
-    <div v-if="widgetdata.length">
-        <div>{{selectedOption}}</div>
-        <bargraphtest :widgetdata="widgetdata"></bargraphtest>
-    </div>
+    <table class="grid">
+        <tbody>
+            <tr v-for="row in 3" :key="row">
+                <td v-for="col in 3" :key="col">
+                    <div v-if="widgetdata.length">
+                        <div>{{selectedOption}}</div>
+                        <bargraphtest :widgetdata="widgetdata"></bargraphtest>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
     <div>
         <button v-if="addclicked" @click="addclicked = !addclicked">+</button>
 
