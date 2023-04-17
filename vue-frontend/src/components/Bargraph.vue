@@ -32,7 +32,7 @@
                     labels: labelArray,
                     datasets: [{
                         data: dataArray,
-                        label: 'Yo Homies'
+                        label: ''
                     }]
                 },
                 chartOptions: {
