@@ -1,8 +1,6 @@
 <script>
 
     let myString = "";
-    import linegraph from '../../src/components/Linegraph.vue'
-    import bargraph from '../../src/components/Barchart.vue'
     import bargraphtest from '../../src/components/Bargraph.vue'
     import axios from 'axios';
 
@@ -21,13 +19,9 @@
 
     export default {
         name: 'Datepicker',
-            components: {
-            linegraph,
-            bargraph
-            },
         data() {
             return {
-                test: true,
+                addclicked: true,
                 lineChartActive: false,
                 barChartActive: false,
                 listItems: [],
@@ -48,7 +42,7 @@
         mounted() {
             this.getData()
         },
-        
+
         props: {
             selectedOption: {
                 type: String,
@@ -61,14 +55,12 @@
 
         },
         setup(props) {
-            if (props.selectedOption === null ) {
+            if (props.selectedOption === null) {
                 selectedOption = 'undefined'
             }
-            if (props.selectedChart === null ) {
+            if (props.selectedChart === null) {
                 selectedChart = 'undefined'
             }
-        },
-        setup() {
             const startDate = ref('');
             const endDate = ref('');
 
@@ -87,7 +79,7 @@
                 maxDate
             };
         }
-    }
+    }  
 
 
 </script>
@@ -121,9 +113,9 @@
         <bargraphtest :widgetdata="widgetdata"></bargraphtest>
     </div>
     <div>
-        <button v-if="test" @click="test = !test">+</button>
+        <button v-if="addclicked" @click="addclicked = !addclicked">+</button>
 
-        <div v-if="!test">
+        <div v-if="!addclicked">
             <div class="popup">
                 <div class="popup-inner">
                     <div class="popup-content">
@@ -137,7 +129,7 @@
                         <br />
                         <select name="category" id="category" v-model="Datamodel">
                             <option disabled selected hidden value=""> Please choose what Datamodel u want to use</option>
-                            <option v-for="item in listItems">{{item}}</option>
+                            <option v-for="datamodel in listItems">{{datamodel}}</option>
                         </select>
                         <br />
                         <label for="start-date">Start Date:</label><br />
