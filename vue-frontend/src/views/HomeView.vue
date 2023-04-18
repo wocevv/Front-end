@@ -109,16 +109,59 @@
 
 <template>
     <table class="grid">
-        <tbody>
-            <tr v-for="row in 3" :key="row">
-                <td v-for="col in 3" :key="col">
+     <!--   <tbody>
+            <tr>
+                <td>
                     <div v-if="widgetdata.length">
-                        <div>{{selectedOption}}</div>
+                        <bargraphtest :widgetdata="widgetdata"></bargraphtest>
+                    </div>
+                </td>
+                <td>
+                    <div v-if="widgetdata.length">
+                        <bargraphtest :widgetdata="widgetdata"></bargraphtest>
+                    </div>
+                </td>
+                <td>
+                    <div v-if="widgetdata.length">
                         <bargraphtest :widgetdata="widgetdata"></bargraphtest>
                     </div>
                 </td>
             </tr>
-        </tbody>
+            <tr>
+                <td>
+                    <div v-if="widgetdata.length">
+                        <bargraphtest :widgetdata="widgetdata"></bargraphtest>
+                    </div>
+                </td>
+                <td>
+                    <div v-if="widgetdata.length">
+                        <bargraphtest :widgetdata="widgetdata"></bargraphtest>
+                    </div>
+                </td>
+                <td>
+                    <div v-if="widgetdata.length">
+                        <bargraphtest :widgetdata="widgetdata"></bargraphtest>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div v-if="widgetdata.length">
+                        <bargraphtest :widgetdata="widgetdata"></bargraphtest>
+                    </div>
+                </td>
+                <td>
+                    <div v-if="widgetdata.length">
+                        <bargraphtest :widgetdata="widgetdata"></bargraphtest>
+                    </div>
+                </td>
+                <td>
+                    <div v-if="widgetdata.length">
+                        <bargraphtest :widgetdata="widgetdata"></bargraphtest>
+                    </div>
+                </td>
+            </tr>
+        </tbody>-->
     </table>
 
     <div>
@@ -162,12 +205,15 @@
                         <br /><br />
                         <button @click="addclicked = !addclicked; SetWidgetConfig()">AddWidget</button>
                         <button @click="addclicked = !addclicked">Cancel</button>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
+    <div v-if="widgetdata.length">
+        <bargraphtest :widgetdata="widgetdata"></bargraphtest>
+    </div>
 </template>
 
 <style scoped>
