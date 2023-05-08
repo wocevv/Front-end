@@ -88,6 +88,7 @@
 
     function SetWidgetConfig() {
         const requestData = {
+           
             GraphType: ChosenGraph,
             dataModel: Datamodel,
             dataType: ShowWhatData,
@@ -147,7 +148,7 @@
                         </select>
                         <br />
                         <select name="category" id="category" v-model="ShowWhatData">
-                            <option disabled selected hidden value="">Please choose what kind of data u want to visualise</option>
+                            <option disabled selected hidden value="">Please choose what kind of data u want to visualise</option>                          
                             <option>Count</option>
                         </select>
                         <br /><br />
