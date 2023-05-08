@@ -25,7 +25,10 @@
                 lineChartActive: false,
                 barChartActive: false,
                 listItems: [],
-                widgetdata: []
+                widgetdata: [],
+                xaxis: '',
+                yaxis: ''
+               
             }
         },
         methods: {
@@ -122,37 +125,53 @@
                     <div class="popup-inner">
                         <div class="popup-content">
                             <slot />
-
-                            <img id="my-image" @click="ChosenGraph = 'line-chart'; lineChartActive = true; barChartActive = false"
-                                 :class="{ 'active': lineChartActive }" src="../../src/images/line-chart.png" width="240" height="128" />
-
-                            <img @click="ChosenGraph = 'bar-chart'; barChartActive = true; lineChartActive = false"
-                                 :class="{ 'active': barChartActive }" src="../../src/images/barchart.jpg" width="240" height="128" />
+                            <h2>Create New Widget</h2><br />
+                            <label for="widget-title">Widget Title:</label><br />
+                            <input type="text" id="name" v-model="Name">
                             <br />
-                            <select name="category" id="category" v-model="Datamodel">
+                            <label for="chart">Chart:</label><br />
+                            <select name="chart" id="chart" v-model="Datamodel">
+                                <option disabled selected hidden value=""> Please choose witch chart u want to use</option>
+                                <option>Line Diagram</option>
+                                <option>Bar Chart</option>
+                            </select><br />
+                            <label for="category">Category:</label><br />
+                            <select name="category" id="category" v-model="ShowWhatData">
                                 <option disabled selected hidden value=""> Please choose what Datamodel u want to use</option>
                                 <option v-for="datamodel in listItems">{{datamodel}}</option>
                             </select>
                             <br />
-                            <label for="start-date">Start Date:</label><br />
-                            <input type="date" id="start-date" v-model="StartDate" :min="minDate" :max="maxDate">
-                            <br>
-                            <label for="end-date">End Date:</label><br />
-                            <input type="date" id="end-date" v-model="EndDate" :min="minDate" :max="maxDate">
-                            <br />
-                            <select name="category" id="category" v-model="GroupBy">
-                                <option disabled selected hidden value="">Please choose what u want to sort by</option>
-                                <option>Day</option>
-                                <option>Week</option>
-                                <option>Month</option>
-                                <option>Year</option>
-                            </select>
-                            <br />
-                            <select name="category" id="category" v-model="ShowWhatData">
-                                <option disabled selected hidden value="">Please choose what kind of data u want to visualise</option>
+                            <label for="x-axis">X-Axis:</label><br />
+                            <select name="chart" id="chart" v-model="xaxis">
+                                <option disabled selected hidden value=""> Please choose witch x-axis u want to use</option>
                                 <option>Count</option>
-                            </select>
-                            <br /><br />
+                                <option>Group-by</option>
+                                <option>Date</option>
+                            </select><br />
+                            <label for="y-axis">Y-Axis:</label><br />
+                            <select name="chart" id="chart" v-model="yaxis">
+                                <option disabled selected hidden value=""> Please choose witch x-axis u want to use</option>
+                                <option>Count</option>
+                                <option>Group-by</option>
+                                <option>Date</option>
+                            </select><br />
+                            <div v-if="xaxis === 'Date' || yaxis === 'Date'">
+                                <label for="start-date">Start Date:</label><br />
+                                <input type="date" id="start-date" v-model="StartDate" :min="minDate" :max="maxDate">
+                                <br>
+                                <label for="end-date">End Date:</label><br />
+                                <input type="date" id="end-date" v-model="EndDate" :min="minDate" :max="maxDate">
+                                <br />
+                                <label for="date-category">Date Category:</label><br />
+                                <select name="category" id="category" v-model="GroupBy">
+                                    <option disabled selected hidden value="">Please choose what u want to sort by</option>
+                                    <option>Day</option>
+                                    <option>Week</option>
+                                    <option>Month</option>
+                                    <option>Year</option>
+                                </select>
+                                <br />
+                            </div><br />
                             <button @click="addclicked = !addclicked; SetWidgetConfig()">AddWidget</button>
                             <button @click="addclicked = !addclicked">Cancel</button>
                         </div>
