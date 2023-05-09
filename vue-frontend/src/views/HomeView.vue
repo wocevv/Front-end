@@ -100,7 +100,7 @@
             DateEnd: EndDate,
         };
         const queryParams = new URLSearchParams(requestData);
-        axios.post(`https://localhost:5001/api/widget/ProductCount?${queryParams.toString()}`)
+        axios.post(`https://localhost:5001/api/widget/ApiModelTest?${queryParams.toString()}`)
             .then((response) => {
                 widgetdata.value = response.data;
                 console.log(widgetdata);
@@ -145,6 +145,7 @@
                             <select name="chart" id="chart" v-model="xaxis">
                                 <option disabled selected hidden value=""> Please choose witch x-axis u want to use</option>
                                 <option>Count</option>
+                                <option>completeness</option>
                                 <option>Group-by</option>
                                 <option>Date</option>
                             </select><br />

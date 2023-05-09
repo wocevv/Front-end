@@ -48,7 +48,7 @@
         setup(props) {
 
             for (const item of props.widgetdata) {
-                labelArray.push(item.month)
+                labelArray.push(item.group)
                 dataArray.push(item.value)
             }
             console.log(props.widgetdata)
