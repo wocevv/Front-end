@@ -130,13 +130,13 @@
                             <input type="text" id="name" v-model="Name">
                             <br />
                             <label for="chart">Chart:</label><br />
-                            <select name="chart" id="chart" v-model="Datamodel">
+                            <select name="chart" id="chart" v-model="ChosenGraph">
                                 <option disabled selected hidden value=""> Please choose witch chart u want to use</option>
                                 <option>Line Diagram</option>
                                 <option>Bar Chart</option>
                             </select><br />
                             <label for="category">Category:</label><br />
-                            <select name="category" id="category" v-model="ShowWhatData">
+                            <select name="category" id="category" v-model="Datamodel">
                                 <option disabled selected hidden value=""> Please choose what Datamodel u want to use</option>
                                 <option v-for="datamodel in listItems">{{datamodel}}</option>
                             </select>
@@ -149,7 +149,7 @@
                                 <option>Date</option>
                             </select><br />
                             <label for="y-axis">Y-Axis:</label><br />
-                            <select name="chart" id="chart" v-model="yaxis">
+                            <select name="chart" id="chart" v-model="ShowWhatData">
                                 <option disabled selected hidden value=""> Please choose witch x-axis u want to use</option>
                                 <option>Count</option>
                                 <option>Group-by</option>
