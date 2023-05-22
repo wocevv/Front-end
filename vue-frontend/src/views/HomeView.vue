@@ -2,9 +2,11 @@
 
     let myString = "";
     import bargraphtest from '../../src/components/Bargraph.vue'
+    import axios from 'axios';
 
     import router from '@/router'
     import { defineComponent, ref, watchEffect, computed } from 'vue'
+    const widgetdata = ref([])
     let Datamodel = ""
     let ShowWhatData = ""
     let GroupBy = ""
@@ -12,7 +14,12 @@
     let ChosenGraph = ""
     let StartDate = ""
     let EndDate = ""
+    let Grouper = ""
+    let xaxis = ref("")
+    let dateGrouper = ""
+
     const widgets = ref([])
+
 
     export default {
         name: 'Datepicker',
@@ -21,7 +28,10 @@
                 addclicked: true,
                 lineChartActive: false,
                 barChartActive: false,
-                listItems: []
+                listItems: [],
+                widgetdata: [],
+                yaxis: ''
+               
             }
         },
         methods: {
@@ -29,7 +39,11 @@
                 const res = await fetch("https://localhost:5001/api/widget/category");
                 const finalRes = await res.json();
                 this.listItems = finalRes;
-            }
+            },
+            Gonext(id) {
+                myString = id   
+                router.push({ name: 'test', params: { myString } })             
+            },
         },
         mounted() {
             this.getData()
@@ -43,7 +57,8 @@
             selectedChart: {
                 type: String,
                 required: true
-            }
+            },
+
         },
         setup(props) {
             if (props.selectedOption === null) {
@@ -78,88 +93,151 @@
 <script setup>
 
     function SetWidgetConfig() {
-        const temp = ref([ChosenGraph, Datamodel, ShowWhatData, GroupBy, StartDate, EndDate])
-        widgets.value.push(temp.value)
+
+        const requestData = {      
+            GraphType: ChosenGraph,
+            dataModel: Datamodel,
+            dataType: ShowWhatData,
+            dateGrouper: GroupBy,
+            DateStart: StartDate,
+            DateEnd: EndDate,
+            Grouper: xaxis.value,
+        };
+        console.log(xaxis.value)
+        if (!requestData.dateGrouper) {
+            requestData.dateGrouper = 'empty',
+                console.log(dateGrouper)
+        };
+        const queryParams = new URLSearchParams(requestData);
+        axios.post(`https://localhost:5001/api/widget/ApiModelTest?${queryParams.toString()}`)
+            .then((response) => {
+                widgetdata.value = response.data;
+                console.log(widgetdata);
+            }).catch((error) => {
+                console.error(error);
+        });
+
     }
 
 </script>
 
 <template>
-    <bargraphtest></bargraphtest>
+    <div v-if="widgetdata.length">
+        <div>{{selectedOption}}</div>
+        <bargraphtest :widgetdata="widgetdata"></bargraphtest>
+    </div>
     <div>
         <button v-if="addclicked" @click="addclicked = !addclicked">+</button>
 
         <div v-if="!addclicked">
-            <div class="popup">
-                <div class="popup-inner">
-                    <div class="popup-content">
-                        <slot />
+            <div class="popup-container">
+                <div class="popup">
+                    <div class="popup-inner">
+                        <div class="popup-content">
+                            <slot />
+                            <h2>Create New Widget</h2><br />
+                            <label for="widget-title">Widget Title:</label><br />
+                            <input type="text" id="name" v-model="Name">
+                            <br />
+                            <label for="chart">Chart:</label><br />
+                            <select name="chart" id="chart" v-model="ChosenGraph">
+                                <option disabled selected hidden value=""> Please choose witch chart u want to use</option>
+                                <option>Line Diagram</option>
+                                <option>Bar Chart</option>
+                            </select><br />
+                            <label for="category">Category:</label><br />
+                            <select name="category" id="category" v-model="Datamodel">
+                                <option disabled selected hidden value=""> Please choose what Datamodel u want to use</option>
+                                <option v-for="datamodel in listItems">{{datamodel}}</option>
+                            </select>
+                            <br />
+                            <label for="x-axis">X-Axis:</label><br />
+                                <select name="chart" id="chart" v-model="xaxis">
+                                    <option disabled selected hidden value=""> Please choose witch x-axis u want to use</option>
+                                    <option>completeness</option>
+                                    <option>created_at</option>
+                                    <option>owner_id</option>
 
-                        <img id="my-image" @click="ChosenGraph = 'line-chart'; lineChartActive = true; barChartActive = false"
-                             :class="{ 'active': lineChartActive }" src="../../src/images/line-chart.png" width="240" height="128" />
-
-                        <img @click="ChosenGraph = 'bar-chart'; barChartActive = true; lineChartActive = false"
-                             :class="{ 'active': barChartActive }" src="../../src/images/barchart.jpg" width="240" height="128" />
-                        <br />
-                        <select name="category" id="category" v-model="Datamodel">
-                            <option disabled selected hidden value=""> Please choose what Datamodel u want to use</option>
-                            <option v-for="datamodel in listItems">{{datamodel}}</option>
-                        </select>
-                        <br />
-                        <label for="start-date">Start Date:</label><br />
-                        <input type="date" id="start-date" v-model="StartDate" :min="minDate" :max="maxDate">
-                        <br>
-                        <label for="end-date">End Date:</label><br />
-                        <input type="date" id="end-date" v-model="EndDate" :min="minDate" :max="maxDate">
-                        <br />
-                        <select name="category" id="category" v-model="GroupBy">
-                            <option disabled selected hidden value="">Please choose what u want to sort by</option>
-                            <option>Day</option>
-                            <option>Week</option>
-                            <option>Month</option>
-                            <option>Year</option>
-                        </select>
-                        <br />
-                        <select name="category" id="category" v-model="ShowWhatData">
-                            <option disabled selected hidden value="">Please choose what kind of data u want to visualise</option>
-                            <option>Count</option>
-                        </select>
-                        <br /><br />
-                        <button @click="addclicked = !addclicked; SetWidgetConfig()">AddWidget</button>
-                        <button @click="addclicked = !addclicked">Cancel</button>
+               <!--                     <option>Count</option>
+                                    <option>Group-by</option>
+                                    <option>Date</option>-->
+                                </select><br />
+                            <label for="y-axis">Y-Axis:</label><br />
+                            <select name="chart" id="chart" v-model="ShowWhatData">
+                                <option disabled selected hidden value=""> Please choose witch x-axis u want to use</option>
+                                <option>Count</option>
+                                <option>Group-by</option>
+                                <option>Date</option>
+                            </select><br />
+                                <label for="start-date">Start Date:</label><br />
+                                <input type="date" id="start-date" v-model="StartDate" :min="minDate" :max="maxDate">
+                                <br>
+                                <label for="end-date">End Date:</label><br />
+                                <input type="date" id="end-date" v-model="EndDate" :min="minDate" :max="maxDate">
+                                <br />
+                                <div v-if="xaxis === 'created_at'">
+                                    <label for="date-category">Date Category:</label><br />
+                                    <select name="category" id="category" v-model="GroupBy">
+                                        <option disabled selected hidden value="">Please choose what u want to sort by</option>
+                                        <option>Day</option>
+                                        <option>Week</option>
+                                        <option>Month</option>
+                                        <option>Year</option>
+                                    </select>
+                                    <br />
+                                </div>
+                            <br />
+                            <button @click="addclicked = !addclicked; SetWidgetConfig()">AddWidget</button>
+                            <button @click="addclicked = !addclicked">Cancel</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
 </template>
 
 <style scoped>
     .active {
         border: 2px solid red;
     }
-    .popup {
+    .popup-container {
         position: fixed;
-        top: 25%;
+        top: 0;
         left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: left;
+        align-items: center;
+        z-index: 999;
+    }
+    .popup {
         width: 100%;
+        max-width: 400px;
         height: 100%;
-        overflow-x: hidden;
-        overflow-y: auto;
-        z-index: 1;
+        
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        border-radius: 5px;
+        overflow: hidden;
+        transform: translateX(30%);
+        transition: transform 0.3s ease-in-out;
     }
 
     .popup-inner {
-        max-width: 30%;
+        align-content:center;
+        max-width: 90%;
         margin: 2rem auto;
     }
 
     .popup-content {
-        background-color: lightgrey;
+        background-color: #fff;
         position: relative;
         background-clip: padding-box;
         border-radius: 0.3rem;
-        border: 1px solid rgba(0,0,0,0.3);
         padding: 1rem;
     }
 </style>

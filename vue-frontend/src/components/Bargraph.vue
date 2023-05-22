@@ -7,21 +7,20 @@
 <script>
     import { Bar } from 'vue-chartjs'
     import { Chart as ChartJS, Colors, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
+    import { defineComponent, ref, watchEffect, computed } from 'vue'
+
 
     ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
     ChartJS.register(Colors)
 
+    const graphdata = ref([])
 
-    const apiFetch = await fetch('https://localhost:5001/api/Widget/ProductCountTest');
-    const jsonApiFetch = await apiFetch.json();
+    
 
     const labelArray = []
     const dataArray = []
 
-    for (const item of jsonApiFetch) {
-        labelArray.push(item.month)
-        dataArray.push(item.value)
-    }
+
 
     export default {
         name: 'BarChart',
@@ -32,7 +31,7 @@
                     labels: labelArray,
                     datasets: [{
                         data: dataArray,
-                        label: 'Yo Homies'
+                        label: 'ProductCount'
                     }]
                 },
                 chartOptions: {
@@ -40,6 +39,19 @@
 
                 }
             }
+        },
+        props: {
+            widgetdata: {
+                type: Array,
+            }
+        },
+        setup(props) {
+
+            for (const item of props.widgetdata) {
+                labelArray.push(item.group)
+                dataArray.push(item.value)
+            }
+            console.log(props.widgetdata)
         }
     }
 </script>
