@@ -25,13 +25,15 @@
         name: 'Datepicker',
         data() {
             return {
-                selectedValue: '',
+                selectedValue : ref(""),
                 options: ['Brands', 'Datamodel', 'Products'],
                 addclicked: true,
                 lineChartActive: false,
                 barChartActive: false,
                 listItems: [],
                 widgetdata: [],
+                listfilters: ['Count', 'Sum'],
+                Listgroupby: ['completeness','created_at','owner_id'],
                 yaxis: ''
                
             }
@@ -40,28 +42,22 @@
         methods: {
             async getData(value) {
                 console.log(value);
-                if (value === 'Brands') {
-                    const res = await fetch("https://localhost:5001/api/widget/Brands");
-                    const finalRes = await res.json();
-                    this.listItems = finalRes; 
-                    console.log(value);
-                    console.log(this.listItems);
-                }
-                else if (value === 'Datamodel') {
+                if (value === 'Products') {
                     const res = await fetch("https://localhost:5001/api/widget/category");
                     const finalRes = await res.json();
                     this.listItems = finalRes;
+
+                    const res2 = await fetch("https://localhost:5001/api/widget/Brands");
+                    const finalRes2 = await res2.json();
+
+                    this.listItems = this.listItems.concat(finalRes2);
+
                     console.log(this.listItems);
 
                 }
-                else if (value === 'Products') {
-                    const res = await fetch("https://localhost:5001/api/widget/category");
-                    const finalRes = await res.json();
-                    this.listItems = finalRes;
-                    console.log(this.listItems);
-
+                else {
+                    this.listItems = []
                 }
-
             },
             Gonext(id) {
                 myString = id   
@@ -83,6 +79,15 @@
             },
 
         },
+        computed: {
+            isDisabledValue() {
+                if (this.selectedValue === 'Products' || this.selectedValue === 'Brands') {
+                    return 'disabled';
+                }
+                return '';
+            }
+        },
+
         setup(props) {
             if (props.selectedOption === null) {
                 selectedOption = 'undefined'
@@ -119,7 +124,7 @@
 
         const requestData = {      
             GraphType: ChosenGraph,
-            dataModel: Datamodel,
+            dataModel: Datamodel.id,
             dataType: ShowWhatData,
             dateGrouper: GroupBy,
             DateStart: StartDate,
@@ -164,7 +169,7 @@
                             <br />
                             <label for="chart">Chart:</label><br />
                             <select name="chart" id="chart" v-model="ChosenGraph">
-                                <option disabled selected hidden value=""> Please choose witch chart u want to use</option>
+                                <option disabled selected hidden value=""> Please choose which chart you want to use</option>
                                 <option>Line Diagram</option>
                                 <option>Bar Chart</option>
                             </select><br />
@@ -176,31 +181,33 @@
                                 <option v-for="option in options" :value="option">{{option}}</option>
                             </select>
                             <br />
-                            
+
                             <label for="category">Category:</label><br />
-                            <select name="category" id="category" v-model="Datamodel">
-                                <option disabled selected hidden value=""> Please choose what Datamodel u want to use</option>
-                                <option v-for="datamodel in listItems">{{datamodel}}</option>
+                            <select name="category" id="category" v-model="Datamodel" :disabled="selectedValue === 'Datamodel' || selectedValue === 'Brands'">
+                                <option v-for="datamodel in listItems" v-bind:value="{id: datamodel.id}">{{datamodel.name}}</option>
+                                <option v-if="selectedValue === 'Brands'" disabled selected hidden value="">All Brands have been chosen.</option>
+                                <option v-if="selectedValue === 'Datamodel'" disabled selected hidden value="">All Datamodels have been chosen.</option>
+                                <option v-if="selectedValue === 'Products'" disabled selected hidden value="">Please choose which Category you want to use.</option>
+                                <option disabled selected hidden value="">Please choose Dataoption first.</option>
                             </select>
+
 
                             <br />
                             <label for="x-axis">X-Axis:</label><br />
                             <select name="chart" id="chart" v-model="xaxis">
-                                <option disabled selected hidden value=""> Please choose witch x-axis u want to use</option>
-                                <option>completeness</option>
-                                <option>created_at</option>
-                                <option>owner_id</option>
-
-                                <!--                     <option>Count</option>
-        <option>Group-by</option>
-        <option>Date</option>-->
+                                <option disabled selected hidden value=""> Please choose which x-axis you want to use</option>
+                                <option disabled selected value="">*Group by*</option>
+                                <option v-for="groupby in Listgroupby">{{groupby}}</option>
+                                <option disabled selected value="">*Filters*</option>
+                                <option v-for="filters in listfilters">{{filters}}</option>
                             </select><br />
                             <label for="y-axis">Y-Axis:</label><br />
                             <select name="chart" id="chart" v-model="ShowWhatData">
-                                <option disabled selected hidden value=""> Please choose witch x-axis u want to use</option>
-                                <option>Count</option>
-                                <option>Group-by</option>
-                                <option>Date</option>
+                                <option disabled selected hidden value=""> Please choose witch x-axis you want to use</option>
+                                <option disabled selected value="">*Group by*</option>
+                                <option v-for="groupby in Listgroupby">{{groupby}}</option>
+                                <option disabled selected value="">*Filters*</option>
+                                <option v-for="filters in listfilters">{{filters}}</option>
                             </select><br />
                             <label for="start-date">Start Date:</label><br />
                             <input type="date" id="start-date" v-model="StartDate" :min="minDate" :max="maxDate">
