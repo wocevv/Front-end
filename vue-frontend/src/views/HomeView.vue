@@ -187,7 +187,7 @@
 
                             <label for="category">Category:</label><br />
                             <select name="category" id="category" v-model="Datamodel" :disabled="selectedValue === 'Datamodel' || selectedValue === 'Brands'">
-                                <option v-for="datamodel in listItems" v-bind:value="{id: datamodel.id}">{{datamodel.name}}</option>
+                                <option v-for="datamodel in ListItems" v-bind:value="{id: datamodel.id}">{{datamodel.name}}</option>
                                 <option v-if="selectedValue === 'Brands'" disabled selected hidden value="">All Brands have been chosen.</option>
                                 <option v-if="selectedValue === 'Datamodel'" disabled selected hidden value="">All Datamodels have been chosen.</option>
                                 <option v-if="selectedValue === 'Products'" disabled selected hidden value="">Please choose which Category you want to use.</option>
