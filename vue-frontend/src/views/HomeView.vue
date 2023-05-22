@@ -25,38 +25,48 @@
         name: 'Datepicker',
         data() {
             return {
-                selectedValue : ref(""),
+                selectedValue: ref(""),
                 options: ['Brands', 'Datamodel', 'Products'],
                 addclicked: true,
                 lineChartActive: false,
                 barChartActive: false,
-                listItems: [],
+                ListItems: [],
                 widgetdata: [],
                 listfilters: ['Count', 'Sum'],
-                Listgroupby: ['completeness','created_at','owner_id'],
+                Listgroupby: ref([]),
                 yaxis: ''
                
             }
         },
 
         methods: {
-            async getData(value) {
-                console.log(value);
+            async getData(value) {      
                 if (value === 'Products') {
-                    const res = await fetch("https://localhost:5001/api/widget/category");
+                    const res = await fetch("https://localhost:5001/api/widget/Datamodel");
                     const finalRes = await res.json();
-                    this.listItems = finalRes;
+                    this.ListItems = finalRes;
 
                     const res2 = await fetch("https://localhost:5001/api/widget/Brands");
                     const finalRes2 = await res2.json();
 
-                    this.listItems = this.listItems.concat(finalRes2);
-
-                    console.log(this.listItems);
+                    this.ListItems = this.ListItems.concat(finalRes2);
+                    const resproducts = await fetch("https://localhost:5001/api/Widget/Products/Properties");
+                    const finalResproducts = await resproducts.json();
+                    this.Listgroupby = finalResproducts;
 
                 }
+                else if (value === "Brands") {
+                    const res = await fetch("https://localhost:5001/api/Widget/Brands/Properties");
+                    const finalRes = await res.json();
+                    this.Listgroupby = finalRes;
+                }
+                else if (value === 'Datamodel') {
+                    const res = await fetch("https://localhost:5001/api/Widget/Datamodels/Properties");
+                    const finalRes = await res.json();
+                    this.Listgroupby = finalRes;
+                }
                 else {
-                    this.listItems = []
+                    this.ListItems = []
                 }
             },
             Gonext(id) {
@@ -79,14 +89,7 @@
             },
 
         },
-        computed: {
-            isDisabledValue() {
-                if (this.selectedValue === 'Products' || this.selectedValue === 'Brands') {
-                    return 'disabled';
-                }
-                return '';
-            }
-        },
+
 
         setup(props) {
             if (props.selectedOption === null) {
@@ -121,7 +124,7 @@
 <script setup>
 
     function SetWidgetConfig() {
-
+        console.log(ShowWhatData)
         const requestData = {      
             GraphType: ChosenGraph,
             dataModel: Datamodel.id,
@@ -190,24 +193,24 @@
                                 <option v-if="selectedValue === 'Products'" disabled selected hidden value="">Please choose which Category you want to use.</option>
                                 <option disabled selected hidden value="">Please choose Dataoption first.</option>
                             </select>
-
-
                             <br />
                             <label for="x-axis">X-Axis:</label><br />
                             <select name="chart" id="chart" v-model="xaxis">
-                                <option disabled selected hidden value=""> Please choose which x-axis you want to use</option>
+                                <option disabled selected hidden value="">Please choose which x-axis you want to use</option>
                                 <option disabled selected value="">*Group by*</option>
-                                <option v-for="groupby in Listgroupby">{{groupby}}</option>
+                                <option v-for="groupby in Listgroupby" :value="1">{{groupby}}</option>
                                 <option disabled selected value="">*Filters*</option>
-                                <option v-for="filters in listfilters">{{filters}}</option>
+                                <option v-for="filters in listfilters" :value="2">{{filters}}</option>
                             </select><br />
+
                             <label for="y-axis">Y-Axis:</label><br />
                             <select name="chart" id="chart" v-model="ShowWhatData">
-                                <option disabled selected hidden value=""> Please choose witch x-axis you want to use</option>
-                                <option disabled selected value="">*Group by*</option>
-                                <option v-for="groupby in Listgroupby">{{groupby}}</option>
-                                <option disabled selected value="">*Filters*</option>
-                                <option v-for="filters in listfilters">{{filters}}</option>
+                                <option disabled selected hidden value="">Please choose which y-axis you want to use</option>
+                                <option disabled selected value="" v-if="xaxis === 2">*Group by*</option>
+                                <option v-for="groupby in Listgroupby" v-if="xaxis === 2">{{groupby}}</option>
+                                <option disabled selected value="" v-if="xaxis === 1">*Filters*</option>
+                                <option v-for="filters in listfilters" v-if="xaxis === 1">{{filters}}</option>
+
                             </select><br />
                             <label for="start-date">Start Date:</label><br />
                             <input type="date" id="start-date" v-model="StartDate" :min="minDate" :max="maxDate">
