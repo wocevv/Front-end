@@ -93,10 +93,9 @@
 <script setup>
 
     function SetWidgetConfig() {
-
         const requestData = {      
             GraphType: ChosenGraph,
-            dataModel: Datamodel,
+            dataModel: Datamodel.id,
             dataType: ShowWhatData,
             dateGrouper: GroupBy,
             DateStart: StartDate,
@@ -148,7 +147,7 @@
                             <label for="category">Category:</label><br />
                             <select name="category" id="category" v-model="Datamodel">
                                 <option disabled selected hidden value=""> Please choose what Datamodel u want to use</option>
-                                <option v-for="datamodel in listItems">{{datamodel}}</option>
+                                <option v-for="datamodel in listItems" v-bind:value="{id: datamodel.id}">{{datamodel.name}}</option>
                             </select>
                             <br />
                             <label for="x-axis">X-Axis:</label><br />
