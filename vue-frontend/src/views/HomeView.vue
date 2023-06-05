@@ -203,12 +203,12 @@
 </script>
 
 <template>
+    <button id="btnAddWiget" v-if="addclicked" @click="addclicked = !addclicked">Add Widget</button>
     <div v-if="widgetdata.length">
         <div>{{ChosenName}}</div>
         <bargraphtest :widgetdata="widgetdata"></bargraphtest>
     </div>
     <div>
-        <button v-if="addclicked" @click="addclicked = !addclicked">+</button>
 
         <div v-if="!addclicked">
             <div class="popup-container">
@@ -216,27 +216,30 @@
                     <div class="popup-inner">
                         <div class="popup-content">
                             <slot />
+
+
                             <h2>Create New Widget</h2><br />
                             <label for="widget-title">Widget Title:</label><br />
                             <input type="text" id="name" v-model="ChosenName">
+
                             <br />
-                            <label for="chart">Chart:</label><br />
-                            <select name="chart" id="chart" v-model="ChosenGraph">
+                            <label class="lblwidget" for="chart">Chart:</label><br />
+                            <select  class="inpWidget" name="chart" id="chart" v-model="ChosenGraph">
                                 <option disabled selected hidden value=""> Please choose which chart you want to use</option>
                                 <option>Line Diagram</option>
                                 <option>Bar Chart</option>
                             </select><br />
 
 
-                            <label for="DataOption">Data option:</label><br />
-                            <select v-model="selectedValue" @change="getData(selectedValue)">
+                            <label class="lblwidget" for="DataOption">Data option:</label><br />
+                            <select class="inpWidget" v-model="selectedValue" @change="getData(selectedValue)">
                                 <option disabled selected hidden value="">Please select a data option</option>
                                 <option v-for="option in options" :value="option">{{option}}</option>
                             </select>
                             <br />
 
-                            <label for="category">Category:</label><br />
-                            <select name="category" id="category" v-model="Datamodel" :disabled="selectedValue === 'Datamodel' || selectedValue === 'Brands'">
+                            <label class="lblwidget" for="category">Category:</label><br />
+                            <select class="inpWidget" name="category" id="category" v-model="Datamodel" :disabled="selectedValue === 'Datamodel' || selectedValue === 'Brands'">
                                 <option v-for="datamodel in ListItems" v-bind:value="{id: datamodel.id}">{{datamodel.name}}</option>
                                 <option v-if="selectedValue === 'Brands'" disabled selected hidden value="">All Brands have been chosen.</option>
                                 <option v-if="selectedValue === 'Datamodel'" disabled selected hidden value="">All Datamodels have been chosen.</option>
@@ -244,8 +247,8 @@
                                 <option disabled selected hidden value="">Please choose Dataoption first.</option>
                             </select>
                             <br />
-                            <label for="x-axis">X-Axis:</label><br />
-                            <select name="chart" id="chart" v-model="xaxis">
+                            <label class="lblwidget" for="x-axis">X-Axis:</label><br />
+                            <select class="inpWidget" name="chart" id="chart" v-model="xaxis">
                                 <option disabled selected hidden value="">Please choose which x-axis you want to use</option>
                                 <option disabled selected value="">*Group by*</option>
                                 <option v-for="groupby in Listgroupby" :value="groupby">{{ groupby }}</option>
@@ -253,8 +256,8 @@
                                 <option v-for="filters in listfilters" :value="filters">{{ filters }}</option>
                             </select><br />
 
-                            <label for="y-axis">Y-Axis:</label><br />
-                            <select name="chart" id="chart" v-model="ShowWhatData">
+                            <label class="lblwidget" for="y-axis">Y-Axis:</label><br />
+                            <select class="inpWidget" name="chart" id="chart" v-model="ShowWhatData">
                                 <option disabled selected hidden value="">Please choose which y-axis you want to use</option>
                                 <option v-for="groupby in Listgroupby" v-if="xaxis === '' || listfilters.includes(xaxis)">{{ groupby }}</option>
                                 <option v-for="filters in listfilters" v-if="xaxis === '' || Listgroupby.includes(xaxis)">{{ filters }}</option>
@@ -263,15 +266,15 @@
 
 
                             <div v-if="xaxis === 'created_at'">
-                                <label for="start-date">Start Date:</label><br />
-                                <input type="date" id="start-date" v-model="StartDate" :min="minDate" :max="maxDate">
+                                <label class="lblwidget" for="start-date">Start Date:</label><br />
+                                <input class="inpWidget" type="date" id="start-date" v-model="StartDate" :min="minDate" :max="maxDate">
                                 <br>
-                                <label for="end-date">End Date:</label><br />
-                                <input type="date" id="end-date" v-model="EndDate" :min="minDate" :max="maxDate">
+                                <label class="lblwidget" for="end-date">End Date:</label><br />
+                                <input class="inpWidget" type="date" id="end-date" v-model="EndDate" :min="minDate" :max="maxDate">
                                 <br />
                                 <div v-if="xaxis === 'created_at'">
-                                    <label for="date-category">Date Category:</label><br />
-                                    <select name="category" id="category" v-model="GroupBy">
+                                    <label class="lblwidget" for="date-category">Date Category:</label><br />
+                                    <select class="inpWidget" name="category" id="category" v-model="GroupBy">
                                         <option disabled selected hidden value="">Please choose what u want to sort by</option>
                                         <option>Day</option>
                                         <option>Week</option>
@@ -282,8 +285,8 @@
                                 </div>
                             </div>
                             <br />
-                            <button @click="addclicked = !addclicked; SetWidgetConfig()">AddWidget</button>
-                            <button @click="addclicked = !addclicked">Cancel</button>
+                            <button class="btnwidget" @click="addclicked = !addclicked; SetWidgetConfig()">AddWidget</button>
+                            <button class="btnwidget" @click="addclicked = !addclicked">Cancel</button>
                         </div>
                     </div>
                 </div>
@@ -303,7 +306,6 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background-color: rgba(0, 0, 0, 0.5);
         display: flex;
         justify-content: left;
         align-items: center;
@@ -313,8 +315,7 @@
         width: 100%;
         max-width: 400px;
         height: 100%;
-        
-        background-color: #fff;
+        background-color: #1072E3;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         border-radius: 5px;
         overflow: hidden;
@@ -329,10 +330,48 @@
     }
 
     .popup-content {
-        background-color: #fff;
+        background-color: #1072E3e;
         position: relative;
         background-clip: padding-box;
         border-radius: 0.3rem;
         padding: 1rem;
+    }
+
+    #headText{
+        color: white;
+    }
+
+    .lblwidget{
+        color: white;
+    }
+
+    .inpWidget {
+        box-sizing: border-box;
+        width: 290px;
+        height: 25px;
+        background: #FFFFFF;
+        border: 1px solid #000000;
+        border-radius: 25px;
+        margin-top: 1%;
+        margin-bottom:2%;
+    }
+
+    .inpWidget:focus-visible{
+        outline: none;
+    }
+
+    .btnwidget {
+        box-sizing: border-box;
+        width: 100px;
+        height: 28px;
+        background: #FFFFFF;
+        border: 1px solid #000000;
+        border-radius: 25px;
+        margin-right:3%;
+    }
+
+    .btnwidget:hover{
+        background-color:black;
+        color: white;
     }
 </style>
