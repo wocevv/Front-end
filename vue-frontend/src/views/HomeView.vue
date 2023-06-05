@@ -32,7 +32,7 @@
         data() {
             return {
                 selectedValue: ref(""),
-                options: ['Brands', 'Datamodel', 'Products'],
+                options: ['Brands', 'Datamodels', 'Products'],
                 addclicked: true,
                 lineChartActive: false,
                 barChartActive: false,
@@ -69,7 +69,7 @@
                     this.Listgroupby = finalRes
                     listgroupby.value = finalRes;
                 }
-                else if (value === 'Datamodel') {
+                else if (value === 'Datamodels') {
                     const res = await fetch("https://localhost:5001/api/Widget/Datamodels/Properties");
                     const finalRes = await res.json();
                     this.Listgroupby = finalRes
@@ -140,12 +140,18 @@
             DataCategory: Datamodel,
             DataId: Datamodel.id,
             DataGrouper: xaxis.value,
-            DataAction: ShowWhatData,
+            DataAction: ShowWhatData.value,
             DateStart: StartDate,
             DateEnd: EndDate,
             DateGrouper: GroupBy,
         };
-     
+        if (Datamodel.id === undefined) {
+            requestData.DataId = "empty"
+        }
+        if (selectedValue.value !== "Products") {
+            requestData.DataCategory = "empty"
+        }
+        console.log(requestData);
         for (let i = 0; i < Brands.value.length; i++) {
             if (Datamodel === Brands.value[1]) {
                 requestData.dataModel = "Brand";
@@ -176,6 +182,7 @@
                 // Modify the requestData object for the else condition
                 requestData.dataGrouper = yaxis.value;
                 requestData.dataFilter = xaxis.value;
+                console.log("2")
                 const queryParams = new URLSearchParams(requestData);
                 axios
                     .post(`https://localhost:5001/api/widget/ApiModelTest2?${queryParams.toString()}`)
@@ -232,7 +239,7 @@
                             <br />
 
                             <label class="lblwidget" for="category">Category:</label><br />
-                            <select class="inpWidget" name="category" id="category" v-model="Datamodel" :disabled="selectedValue === 'Datamodel' || selectedValue === 'Brands'">
+                            <select class="inpWidget" name="category" id="category" v-model="Datamodel" :disabled="selectedValue === 'Datamodels' || selectedValue === 'Brands'">
                                 <option v-for="datamodel in ListItems" v-bind:value="{id: datamodel.id}">{{datamodel.name}}</option>
                                 <option v-if="selectedValue === 'Brands'" disabled selected hidden value="">All Brands have been chosen.</option>
                                 <option v-if="selectedValue === 'Datamodel'" disabled selected hidden value="">All Datamodels have been chosen.</option>
@@ -355,7 +362,7 @@
         background: #FFFFFF;
         border: 1px solid #000000;
         border-radius: 25px;
-        margin-right:3%;
+        margin-left:4.7%;
     }
 
     .btnwidget:hover{
