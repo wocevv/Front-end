@@ -157,10 +157,10 @@
         console.log(requestData);
         for (let i = 0; i < Brands.value.length; i++) {
             if (Datamodel === Brands.value[1]) {
-                requestData.dataModel = "Brand";
+                requestData.DataCategory = "Brand";
             }
             else {
-                requestData.dataModel = "Datamodel";
+                requestData.DataCategory = "Datamodel";
             }
 
         }
