@@ -24,7 +24,7 @@
     const Brands = ref([])
     const widgets = ref([])
     let ChosenName = ""
-
+    let TestValue = 0
 
 
     export default {
@@ -98,6 +98,9 @@
                 type: String,
                 required: true
             },
+            testValue: {
+                type: Number,
+            }
 
         },
 
@@ -173,6 +176,7 @@
                     .then((response) => {
                         widgetdata.value = response.data;
                         console.log(widgetdata);
+                        TestValue = 1
                     })
                     .catch((error) => {
                         console.error(error);
@@ -189,6 +193,7 @@
                     .then((response) => {
                         widgetdata.value = response.data;
                         console.log(widgetdata);
+                        TestValue = 2
                     })
                     .catch((error) => {
                         console.error(error);
@@ -206,7 +211,7 @@
     <button id="btnAddWiget" v-if="addclicked" @click="addclicked = !addclicked">Add Widget</button>
     <div v-if="widgetdata.length">
         <h2>{{ChosenName}}</h2>
-        <bargraphtest :widgetdata="widgetdata"></bargraphtest>
+        <bargraphtest :widgetdata="widgetdata" :testValue="TestValue"></bargraphtest>
     </div>
     <div>
 

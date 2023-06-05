@@ -1,62 +1,91 @@
 <template>
-    <Bar id="my-chart-id"
-            :options="chartOptions"
-            :data="chartData" />
+    <Bar id="my-chart-id" :options="chartOptions" :data="chartData" />
 </template>
 
 <script>
     import { Bar } from 'vue-chartjs'
     import { Chart as ChartJS, Colors, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
-    import { defineComponent, ref, watchEffect, computed } from 'vue'
-
+    import { defineComponent, ref, watchEffect, computed, watch } from 'vue'
 
     ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
     ChartJS.register(Colors)
 
-    const graphdata = ref([])
-
-    
-
     const labelArray = []
     const dataArray = []
-
-
 
     export default {
         name: 'BarChart',
         components: { Bar },
+        props: {
+            widgetdata: {
+                type: Array,
+            },
+            testValue: {
+                type: Number,
+            }
+        },
         data() {
             return {
                 chartData: {
                     labels: labelArray,
-                    datasets: [{
-                        data: dataArray,
-                        label: 'ProductCount'
-                    }]
+                    datasets: [
+                        {
+                            data: dataArray,
+                            label: 'ProductCount'
+                        }
+                    ]
                 },
                 chartOptions: {
                     responsive: true,
-                    indexAxis: 'y', // Set the index axis to 'y' to display groups on the left-hand side
+                    indexAxis: 'y',
                     scales: {
                         x: {
-                            beginAtZero: true // Optional: Set this to false if you don't want the value axis to start at zero
+                            beginAtZero: true
+                        },
+                        y: {
+                            beginAtZero: true
                         }
                     }
                 }
             }
         },
-        props: {
+        watch: {
             widgetdata: {
-                type: Array,
+                handler(newVal) {
+                    this.updateChartData(newVal)
+                },
+                immediate: true
+            },
+            testValue: {
+                handler(newVal) {
+                    this.updateChartOptions(newVal)
+                },
+                immediate: true
             }
         },
-        setup(props) {
+        methods: {
+            updateChartOptions(testValue) {
+                if (testValue === 1) {
+                    this.chartOptions.indexAxis = 'x'
+                } else if (testValue === 2) {
+                    this.chartOptions.indexAxis = 'y'
+                    // Swap the x and y scales
+                    this.chartOptions.scales.x = { beginAtZero: true }
+                    this.chartOptions.scales.y = { beginAtZero: true }
+                }
+            },
+            updateChartData(data) {
+                labelArray.length = 0
+                dataArray.length = 0
 
-            for (const item of props.widgetdata) {
-                labelArray.push(item.group)
-                dataArray.push(item.value)
+                for (const item of data) {
+                    labelArray.push(item.group)
+                    dataArray.push(item.value)
+                }
+
+                this.chartData.labels = labelArray
+                this.chartData.datasets[0].data = dataArray
             }
-            console.log(props.widgetdata)
         }
     }
 </script>
