@@ -36,7 +36,12 @@
                 },
                 chartOptions: {
                     responsive: true,
-
+                    indexAxis: 'y', // Set the index axis to 'y' to display groups on the left-hand side
+                    scales: {
+                        x: {
+                            beginAtZero: true // Optional: Set this to false if you don't want the value axis to start at zero
+                        }
+                    }
                 }
             }
         },

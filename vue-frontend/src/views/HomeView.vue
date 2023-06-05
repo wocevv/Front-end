@@ -178,10 +178,10 @@
                         console.error(error);
                     });
                     break
-            } else if (i === listgroupby.value.length && xaxis.value !== listgroupby.value[i]){
+            } else if (i === listgroupby.value.length - 1 && xaxis.value !== listgroupby.value[i]){
                 // Modify the requestData object for the else condition
-                requestData.dataGrouper = yaxis.value;
-                requestData.dataFilter = xaxis.value;
+                requestData.DataGrouper = ShowWhatData.value;
+                requestData.DataAction = xaxis.value;
                 console.log("2")
                 const queryParams = new URLSearchParams(requestData);
                 axios
