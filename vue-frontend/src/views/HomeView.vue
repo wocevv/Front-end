@@ -19,7 +19,12 @@
     let dateGrouper = ""
     let xaxistest = ""
     let yaxis = ref("");
+    let selectedValue = ref("")
+    const listgroupby = ref([])
+    const Brands = ref([])
     const widgets = ref([])
+    let ChosenName = ""
+
 
 
     export default {
@@ -50,26 +55,31 @@
 
                     const res2 = await fetch("https://localhost:5001/api/widget/Brands");
                     const finalRes2 = await res2.json();
-
+                    Brands.value = finalRes2
                     this.ListItems = this.ListItems.concat(finalRes2);
                     const resproducts = await fetch("https://localhost:5001/api/Widget/Products/Properties");
                     const finalResproducts = await resproducts.json();
                     this.Listgroupby = finalResproducts;
-
+                    listgroupby.value = finalResproducts;
+                  
                 }
                 else if (value === "Brands") {
                     const res = await fetch("https://localhost:5001/api/Widget/Brands/Properties");
                     const finalRes = await res.json();
-                    this.Listgroupby = finalRes;
+                    this.Listgroupby = finalRes
+                    listgroupby.value = finalRes;
                 }
                 else if (value === 'Datamodel') {
                     const res = await fetch("https://localhost:5001/api/Widget/Datamodels/Properties");
                     const finalRes = await res.json();
-                    this.Listgroupby = finalRes;
+                    this.Listgroupby = finalRes
+                    listgroupby.value = finalRes;
                 }
                 else {
+                    listgroupby.value = []
                     this.ListItems = []
                 }
+                console.log(listgroupby)
             },
             Gonext(id) {
                 myString = id   
@@ -126,38 +136,76 @@
 <script setup>
 
     function SetWidgetConfig() {
-        console.log(ShowWhatData)
-        console.log(xaxis.value)
-        const requestData = {      
-            GraphType: ChosenGraph,
-            dataModel: Datamodel.id,
-            dataType: ShowWhatData,
-            dateGrouper: GroupBy,
+        console.log(xaxis.value);
+        console.log(listgroupby.value);
+
+        const requestData = {
+            DataOption: selectedValue.value,
+            DataCategory: Datamodel,
+            DataId: Datamodel.id,
+            DataGrouper: xaxis.value,
+            DataAction: ShowWhatData,
             DateStart: StartDate,
             DateEnd: EndDate,
-            Grouper: xaxis.value,
+            DateGrouper: GroupBy,
         };
-        if (!requestData.dateGrouper) {
-            requestData.dateGrouper = 'empty',
-                console.log(dateGrouper)
-        };
-        const queryParams = new URLSearchParams(requestData);
-        axios.post(`https://localhost:5001/api/widget/ApiModelTest?${queryParams.toString()}`)
-            .then((response) => {
-                widgetdata.value = response.data;
-                console.log(widgetdata);
-            }).catch((error) => {
-                console.error(error);
-        });
+     
+        for (let i = 0; i < Brands.value.length; i++) {
+            if (Datamodel === Brands.value[1]) {
+                requestData.dataModel = "Brand";
+            }
+            else {
+                requestData.dataModel = "Datamodel";
+            }
 
+        }
+        if (!requestData.DateGrouper) {
+            requestData.DateGrouper = 'empty';
+        }
+
+        console.log(requestData)
+        for (let i = 0; i < listgroupby.value.length; i++) {
+            if (xaxis.value === listgroupby.value[i]) {
+                const queryParams = new URLSearchParams(requestData);
+                axios
+                    .post(`https://localhost:5001/api/widget/ApiModelTest2?${queryParams.toString()}`)
+                    .then((response) => {
+                        widgetdata.value = response.data;
+                        console.log(widgetdata);
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
+                    console.log("xas")
+                    break
+            } else if (i === listgroupby.value.length && xaxis.value !== listgroupby.value[i]){
+                // Modify the requestData object for the else condition
+                requestData.dataGrouper = yaxis.value;
+                requestData.dataFilter = xaxis.value;
+                console.log("yas")
+                const queryParams = new URLSearchParams(requestData);
+                axios
+                    .post(`https://localhost:5001/api/widget/ApiModelTest2?${queryParams.toString()}`)
+                    .then((response) => {
+                        widgetdata.value = response.data;
+                        console.log(widgetdata);
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
+
+            }
+        }
     }
+
+
 
 </script>
 
 <template>
     <button id="btnAddWiget" v-if="addclicked" @click="addclicked = !addclicked">Add Widget</button>
     <div v-if="widgetdata.length">
-        <div>{{selectedOption}}</div>
+        <div>{{ChosenName}}</div>
         <bargraphtest :widgetdata="widgetdata"></bargraphtest>
     </div>
     <div>
@@ -168,9 +216,12 @@
                     <div class="popup-inner">
                         <div class="popup-content">
                             <slot />
-                            <h2 id="headText">Create New Widget</h2><br />
-                            <label class="lblwidget" for="widget-title">Widget Title:</label><br />
-                            <input class="inpWidget" type="text" id="name" v-model="Name">
+
+
+                            <h2>Create New Widget</h2><br />
+                            <label for="widget-title">Widget Title:</label><br />
+                            <input type="text" id="name" v-model="ChosenName">
+
                             <br />
                             <label class="lblwidget" for="chart">Chart:</label><br />
                             <select  class="inpWidget" name="chart" id="chart" v-model="ChosenGraph">
