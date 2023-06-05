@@ -8,7 +8,7 @@
     import { defineComponent, ref, watchEffect, computed } from 'vue'
     const widgetdata = ref([])
     let Datamodel = ""
-    let ShowWhatData = ""
+    let ShowWhatData = ref("")
     let GroupBy = ""
     let Datarange = ""
     let ChosenGraph = ""
@@ -79,7 +79,6 @@
                     listgroupby.value = []
                     this.ListItems = []
                 }
-                console.log(listgroupby)
             },
             Gonext(id) {
                 myString = id   
@@ -136,9 +135,6 @@
 <script setup>
 
     function SetWidgetConfig() {
-        console.log(xaxis.value);
-        console.log(listgroupby.value);
-
         const requestData = {
             DataOption: selectedValue.value,
             DataCategory: Datamodel,
@@ -163,7 +159,6 @@
             requestData.DateGrouper = 'empty';
         }
 
-        console.log(requestData)
         for (let i = 0; i < listgroupby.value.length; i++) {
             if (xaxis.value === listgroupby.value[i]) {
                 const queryParams = new URLSearchParams(requestData);
@@ -176,13 +171,11 @@
                     .catch((error) => {
                         console.error(error);
                     });
-                    console.log("xas")
                     break
             } else if (i === listgroupby.value.length && xaxis.value !== listgroupby.value[i]){
                 // Modify the requestData object for the else condition
                 requestData.dataGrouper = yaxis.value;
                 requestData.dataFilter = xaxis.value;
-                console.log("yas")
                 const queryParams = new URLSearchParams(requestData);
                 axios
                     .post(`https://localhost:5001/api/widget/ApiModelTest2?${queryParams.toString()}`)
@@ -205,7 +198,7 @@
 <template>
     <button id="btnAddWiget" v-if="addclicked" @click="addclicked = !addclicked">Add Widget</button>
     <div v-if="widgetdata.length">
-        <div>{{ChosenName}}</div>
+        <h2>{{ChosenName}}</h2>
         <bargraphtest :widgetdata="widgetdata"></bargraphtest>
     </div>
     <div>
@@ -218,13 +211,13 @@
                             <slot />
 
 
-                            <h2>Create New Widget</h2><br />
-                            <label for="widget-title">Widget Title:</label><br />
-                            <input type="text" id="name" v-model="ChosenName">
+                            <h2 id="headText">Create New Widget</h2><br />
+                            <label class="lblwidget" for="widget-title">Widget Title:</label><br />
+                            <input class="inpWidget" type="text" id="name" v-model="ChosenName">
 
                             <br />
                             <label class="lblwidget" for="chart">Chart:</label><br />
-                            <select  class="inpWidget" name="chart" id="chart" v-model="ChosenGraph">
+                            <select class="inpWidget" name="chart" id="chart" v-model="ChosenGraph">
                                 <option disabled selected hidden value=""> Please choose which chart you want to use</option>
                                 <option>Line Diagram</option>
                                 <option>Bar Chart</option>
@@ -262,17 +255,13 @@
                                 <option v-for="groupby in Listgroupby" v-if="xaxis === '' || listfilters.includes(xaxis)">{{ groupby }}</option>
                                 <option v-for="filters in listfilters" v-if="xaxis === '' || Listgroupby.includes(xaxis)">{{ filters }}</option>
                             </select><br />
-
-
-
-                            <div v-if="xaxis === 'created_at'">
-                                <label class="lblwidget" for="start-date">Start Date:</label><br />
-                                <input class="inpWidget" type="date" id="start-date" v-model="StartDate" :min="minDate" :max="maxDate">
-                                <br>
-                                <label class="lblwidget" for="end-date">End Date:</label><br />
-                                <input class="inpWidget" type="date" id="end-date" v-model="EndDate" :min="minDate" :max="maxDate">
-                                <br />
-                                <div v-if="xaxis === 'created_at'">
+                            <label class="lblwidget" for="start-date">Start Date:</label><br />
+                            <input class="inpWidget" type="date" id="start-date" v-model="StartDate" :min="minDate" :max="maxDate">
+                            <br>
+                            <label class="lblwidget" for="end-date">End Date:</label><br />
+                            <input class="inpWidget" type="date" id="end-date" v-model="EndDate" :min="minDate" :max="maxDate">
+                            <br />
+                                <div v-if="xaxis.includes('_at') || ShowWhatData.includes('_at') ">
                                     <label class="lblwidget" for="date-category">Date Category:</label><br />
                                     <select class="inpWidget" name="category" id="category" v-model="GroupBy">
                                         <option disabled selected hidden value="">Please choose what u want to sort by</option>
@@ -292,7 +281,6 @@
                 </div>
             </div>
         </div>
-    </div>
 
 </template>
 
