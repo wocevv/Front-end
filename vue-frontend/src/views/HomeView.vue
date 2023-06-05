@@ -17,7 +17,8 @@
     let Grouper = ""
     let xaxis = ref("")
     let dateGrouper = ""
-
+    let xaxistest = ""
+    let yaxis = ref("");
     const widgets = ref([])
 
 
@@ -34,7 +35,8 @@
                 widgetdata: [],
                 listfilters: ['Count', 'Sum'],
                 Listgroupby: ref([]),
-                yaxis: ''
+                yaxis,
+                xaxis
                
             }
         },
@@ -125,6 +127,7 @@
 
     function SetWidgetConfig() {
         console.log(ShowWhatData)
+        console.log(xaxis.value)
         const requestData = {      
             GraphType: ChosenGraph,
             dataModel: Datamodel.id,
@@ -134,7 +137,6 @@
             DateEnd: EndDate,
             Grouper: xaxis.value,
         };
-        console.log(xaxis.value)
         if (!requestData.dateGrouper) {
             requestData.dateGrouper = 'empty',
                 console.log(dateGrouper)
@@ -198,36 +200,38 @@
                             <select name="chart" id="chart" v-model="xaxis">
                                 <option disabled selected hidden value="">Please choose which x-axis you want to use</option>
                                 <option disabled selected value="">*Group by*</option>
-                                <option v-for="groupby in Listgroupby" :value="1">{{groupby}}</option>
-                                <option disabled selected value="">*Filters*</option>
-                                <option v-for="filters in listfilters" :value="2">{{filters}}</option>
+                                <option v-for="groupby in Listgroupby" :value="groupby">{{ groupby }}</option>
+                                <option disabled value="">*Filters*</option>
+                                <option v-for="filters in listfilters" :value="filters">{{ filters }}</option>
                             </select><br />
 
                             <label for="y-axis">Y-Axis:</label><br />
                             <select name="chart" id="chart" v-model="ShowWhatData">
                                 <option disabled selected hidden value="">Please choose which y-axis you want to use</option>
-                                <option disabled selected value="" v-if="xaxis === 2">*Group by*</option>
-                                <option v-for="groupby in Listgroupby" v-if="xaxis === 2">{{groupby}}</option>
-                                <option disabled selected value="" v-if="xaxis === 1">*Filters*</option>
-                                <option v-for="filters in listfilters" v-if="xaxis === 1">{{filters}}</option>
-
+                                <option v-for="groupby in Listgroupby" v-if="xaxis === '' || listfilters.includes(xaxis)">{{ groupby }}</option>
+                                <option v-for="filters in listfilters" v-if="xaxis === '' || Listgroupby.includes(xaxis)">{{ filters }}</option>
                             </select><br />
-                            <label for="start-date">Start Date:</label><br />
-                            <input type="date" id="start-date" v-model="StartDate" :min="minDate" :max="maxDate">
-                            <br>
-                            <label for="end-date">End Date:</label><br />
-                            <input type="date" id="end-date" v-model="EndDate" :min="minDate" :max="maxDate">
-                            <br />
+
+
+
                             <div v-if="xaxis === 'created_at'">
-                                <label for="date-category">Date Category:</label><br />
-                                <select name="category" id="category" v-model="GroupBy">
-                                    <option disabled selected hidden value="">Please choose what u want to sort by</option>
-                                    <option>Day</option>
-                                    <option>Week</option>
-                                    <option>Month</option>
-                                    <option>Year</option>
-                                </select>
+                                <label for="start-date">Start Date:</label><br />
+                                <input type="date" id="start-date" v-model="StartDate" :min="minDate" :max="maxDate">
+                                <br>
+                                <label for="end-date">End Date:</label><br />
+                                <input type="date" id="end-date" v-model="EndDate" :min="minDate" :max="maxDate">
                                 <br />
+                                <div v-if="xaxis === 'created_at'">
+                                    <label for="date-category">Date Category:</label><br />
+                                    <select name="category" id="category" v-model="GroupBy">
+                                        <option disabled selected hidden value="">Please choose what u want to sort by</option>
+                                        <option>Day</option>
+                                        <option>Week</option>
+                                        <option>Month</option>
+                                        <option>Year</option>
+                                    </select>
+                                    <br />
+                                </div>
                             </div>
                             <br />
                             <button @click="addclicked = !addclicked; SetWidgetConfig()">AddWidget</button>
