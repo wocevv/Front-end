@@ -5,7 +5,6 @@
 <script>
     import { Bar } from 'vue-chartjs'
     import { Chart as ChartJS, Colors, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
-    import { defineComponent, ref, watchEffect, computed, watch } from 'vue'
 
     ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
     ChartJS.register(Colors)

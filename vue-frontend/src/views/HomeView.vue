@@ -1,11 +1,10 @@
 <script>
 
     let myString = "";
-    import bargraphtest from '../../src/components/Bargraph.vue'
     import axios from 'axios';
 
     import router from '@/router'
-    import { defineComponent, ref, watchEffect, computed } from 'vue'
+    import { ref, computed } from 'vue'
     const widgetdata = ref([])
     let Datamodel = ""
     let ShowWhatData = ref("")
