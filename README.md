@@ -2,6 +2,10 @@
 This project was made using vue.js.
 
 ## Setup
+To easily clone the repository, click on "<> Code", then click "Open with Visual Studio". 
+This will open the project for you in Visual Studio.
+
+
 Before proceeding with the rest, we need to make sure you are in the right directory, which is `Front-end\vue-frontend`. Run the following command:
 `cd .\vue-frontend\`
 
