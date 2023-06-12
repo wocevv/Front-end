@@ -38,8 +38,6 @@
                 widgetdata: [],
                 listfilters: ['Count', 'Sum'],
                 Listgroupby: ref([]),
-                yaxis,
-                xaxis
                
             }
         },
@@ -110,14 +108,6 @@
             const startDate = ref('');
             const endDate = ref('');
 
-            const minDate = computed(() => {
-                return '2023-04-03'; // set the minimum date to April 3, 2023
-            });
-
-            const maxDate = computed(() => {
-                return '2023-04-10'; // set the maximum date to April 10, 2023
-            });
-
             return {
                 startDate,
                 endDate,
@@ -178,10 +168,8 @@
                     });
                     break
             } else if (i === listgroupby.value.length - 1 && xaxis.value !== listgroupby.value[i]){
-                // Modify the requestData object for the else condition
                 requestData.DataGrouper = ShowWhatData.value;
                 requestData.DataAction = xaxis.value;
-                console.log("2")
                 const queryParams = new URLSearchParams(requestData);
                 axios
                     .post(`https://localhost:5001/api/widget/ApiModelTest2?${queryParams.toString()}`)
