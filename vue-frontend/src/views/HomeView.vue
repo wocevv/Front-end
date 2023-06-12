@@ -3,7 +3,7 @@
     import axios from 'axios';
     import router from '@/router'
     import { ref, computed } from 'vue'
-    import bargraphtest from '../../src/components/Bargraph.vue'
+    import bargraph from '../../src/components/Bargraph.vue'
     const widgetdata = ref([])
     let WidgetTitle = ""
     let Datamodel = ""
@@ -18,7 +18,7 @@
     let dateGrouper = ""
     let yaxis = ref("");
     let selectedValue = ref("")
-    let testvalue = 0
+    let orientationValue = 0
     const listgroupby = ref([])
     const Brands = ref([])
 
@@ -38,6 +38,8 @@
                 widgetdata: [],
                 listfilters: ['Count', 'Sum'],
                 Listgroupby: ref([]),
+                yaxis,
+                xaxis
                
             }
         },
@@ -90,7 +92,7 @@
                 type: String,
                 required: true
             },
-            testvalue: {
+            orientationValue: {
                 type: Number
             }
 
@@ -161,7 +163,7 @@
                     .then((response) => {
                         widgetdata.value = response.data;
                         console.log(widgetdata);
-                        testvalue = 1;
+                        orientationValue = 1;
                     })
                     .catch((error) => {
                         console.error(error);
@@ -176,7 +178,7 @@
                     .then((response) => {
                         widgetdata.value = response.data;
                         console.log(widgetdata);
-                        testvalue = 2
+                        orientationValue = 2
                     })
                     .catch((error) => {
                         console.error(error);
@@ -194,7 +196,7 @@
     <button id="btnAddWiget" v-if="addclicked" @click="addclicked = !addclicked">Add Widget</button>
     <div v-if="widgetdata.length">
         <h2>{{WidgetTitle}}</h2>
-        <bargraphtest :widgetdata="widgetdata" :testvalue="testvalue" ></bargraphtest>
+        <bargraph :widgetdata="widgetdata" :orientationValue="orientationValue" ></bargraph>
     </div>
     <div>
 

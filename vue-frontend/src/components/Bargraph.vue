@@ -5,6 +5,7 @@
 <script>
     import { Bar } from 'vue-chartjs'
     import { Chart as ChartJS, Colors, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
+    import { defineComponent, ref, watchEffect, computed, watch } from 'vue'
 
     ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
     ChartJS.register(Colors)
@@ -19,7 +20,7 @@
             widgetdata: {
                 type: Array,
             },
-            testValue: {
+            orientationValue: {
                 type: Number,
             }
         },
@@ -55,7 +56,7 @@
                 },
                 immediate: true
             },
-            testValue: {
+            orientationValue: {
                 handler(newVal) {
                     this.updateChartOptions(newVal)
                 },
@@ -63,10 +64,10 @@
             }
         },
         methods: {
-            updateChartOptions(testValue) {
-                if (testValue === 1) {
+            updateChartOptions(orientationValue) {
+                if (orientationValue === 1) {
                     this.chartOptions.indexAxis = 'x'
-                } else if (testValue === 2) {
+                } else if (orientationValue === 2) {
                     this.chartOptions.indexAxis = 'y'
                     // Swap the x and y scales
                     this.chartOptions.scales.x = { beginAtZero: true }
