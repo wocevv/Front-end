@@ -1,11 +1,11 @@
 <script>
 
-    let myString = "";
     import axios from 'axios';
-
     import router from '@/router'
     import { ref, computed } from 'vue'
+    import bargraphtest from '../../src/components/Bargraph.vue'
     const widgetdata = ref([])
+    let WidgetTitle = ""
     let Datamodel = ""
     let ShowWhatData = ref("")
     let GroupBy = ""
@@ -16,13 +16,12 @@
     let Grouper = ""
     let xaxis = ref("")
     let dateGrouper = ""
-    let xaxistest = ""
     let yaxis = ref("");
     let selectedValue = ref("")
+    let testvalue = 0
     const listgroupby = ref([])
     const Brands = ref([])
-    const widgets = ref([])
-    let ChosenName = ""
+
 
 
 
@@ -79,10 +78,6 @@
                     this.ListItems = []
                 }
             },
-            Gonext(id) {
-                myString = id   
-                router.push({ name: 'test', params: { myString } })             
-            },
         },
         mounted() {
             this.getData()
@@ -97,6 +92,9 @@
                 type: String,
                 required: true
             },
+            testvalue: {
+                type: Number
+            }
 
         },
 
@@ -104,6 +102,7 @@
         setup(props) {
             if (props.selectedOption === null) {
                 selectedOption = 'undefined'
+                
             }
             if (props.selectedChart === null) {
                 selectedChart = 'undefined'
@@ -153,10 +152,10 @@
         console.log(requestData);
         for (let i = 0; i < Brands.value.length; i++) {
             if (Datamodel === Brands.value[1]) {
-                requestData.dataModel = "Brand";
+                requestData.DataCategory = "Brand";
             }
             else {
-                requestData.dataModel = "Datamodel";
+                requestData.DataCategory = "Datamodel";
             }
 
         }
@@ -172,6 +171,7 @@
                     .then((response) => {
                         widgetdata.value = response.data;
                         console.log(widgetdata);
+                        testvalue = 1;
                     })
                     .catch((error) => {
                         console.error(error);
@@ -188,6 +188,7 @@
                     .then((response) => {
                         widgetdata.value = response.data;
                         console.log(widgetdata);
+                        testvalue = 2
                     })
                     .catch((error) => {
                         console.error(error);
@@ -204,8 +205,8 @@
 <template>
     <button id="btnAddWiget" v-if="addclicked" @click="addclicked = !addclicked">Add Widget</button>
     <div v-if="widgetdata.length">
-        <h2>{{ChosenName}}</h2>
-        <bargraphtest :widgetdata="widgetdata"></bargraphtest>
+        <h2>{{WidgetTitle}}</h2>
+        <bargraphtest :widgetdata="widgetdata" :testvalue="testvalue" ></bargraphtest>
     </div>
     <div>
 
@@ -219,7 +220,7 @@
 
                             <h2 id="headText">Create New Widget</h2><br />
                             <label class="lblwidget" for="widget-title">Widget Title:</label><br />
-                            <input class="inpWidget" type="text" id="name" v-model="ChosenName">
+                            <input class="inpWidget" type="text" id="name" v-model="WidgetTitle">
 
                             <br />
                             <label class="lblwidget" for="chart">Chart:</label><br />
