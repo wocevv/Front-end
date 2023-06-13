@@ -30,7 +30,7 @@
         data() {
             return {
                 selectedValue: ref(""),
-                options: ['Brands', 'Datamodels', 'Products'],
+                options: ['All Brands', 'All Datamodels', 'Datamodel', 'Brand'],
                 addclicked: true,
                 lineChartActive: false,
                 barChartActive: false,
@@ -46,28 +46,34 @@
 
         methods: {
             async getData(value) {      
-                if (value === 'Products') {
+                if (value === 'Datamodel') {
                     const res = await fetch("https://localhost:5001/api/widget/Datamodel");
                     const finalRes = await res.json();
                     this.ListItems = finalRes;
 
-                    const res2 = await fetch("https://localhost:5001/api/widget/Brands");
-                    const finalRes2 = await res2.json();
-                    Brands.value = finalRes2
-                    this.ListItems = this.ListItems.concat(finalRes2);
                     const resproducts = await fetch("https://localhost:5001/api/Widget/Products/Properties");
                     const finalResproducts = await resproducts.json();
                     this.Listgroupby = finalResproducts;
                     listgroupby.value = finalResproducts;
                   
+                } else if (value === "Brand") {
+                    const res = await fetch("https://localhost:5001/api/widget/Brands");
+                    const finalRes = await res.json();
+                    this.ListItems = finalRes;
+
+                    const resproducts = await fetch("https://localhost:5001/api/Widget/Products/Properties");
+                    const finalResproducts = await resproducts.json();
+                    this.Listgroupby = finalResproducts;
+                    listgroupby.value = finalResproducts;
+                 
                 }
-                else if (value === "Brands") {
+                else if (value === "All Brands") {
                     const res = await fetch("https://localhost:5001/api/Widget/Brands/Properties");
                     const finalRes = await res.json();
                     this.Listgroupby = finalRes
                     listgroupby.value = finalRes;
                 }
-                else if (value === 'Datamodels') {
+                else if (value === 'All Datamodels') {
                     const res = await fetch("https://localhost:5001/api/Widget/Datamodels/Properties");
                     const finalRes = await res.json();
                     this.Listgroupby = finalRes
@@ -144,10 +150,10 @@
         console.log(requestData);
         for (let i = 0; i < Brands.value.length; i++) {
             if (Datamodel === Brands.value[1]) {
-                requestData.DataCategory = "Brand";
+                requestData.DataCategory = "All Brands";
             }
             else {
-                requestData.DataCategory = "Datamodel";
+                requestData.DataCategory = "All Datamodels";
             }
 
         }
@@ -231,9 +237,10 @@
                             <label class="lblwidget" for="category">Category:</label><br />
                             <select class="inpWidget" name="category" id="category" v-model="Datamodel" :disabled="selectedValue === 'Datamodels' || selectedValue === 'Brands'">
                                 <option v-for="datamodel in ListItems" v-bind:value="{id: datamodel.id}">{{datamodel.name}}</option>
-                                <option v-if="selectedValue === 'Brands'" disabled selected hidden value="">All Brands have been chosen.</option>
-                                <option v-if="selectedValue === 'Datamodel'" disabled selected hidden value="">All Datamodels have been chosen.</option>
-                                <option v-if="selectedValue === 'Products'" disabled selected hidden value="">Please choose which Category you want to use.</option>
+                                <option v-if="selectedValue === 'All Brands'" disabled selected hidden value="">All Brands have been chosen.</option>
+                                <option v-if="selectedValue === 'All Datamodels'" disabled selected hidden value="">All Datamodels have been chosen.</option>
+                                <option v-if="selectedValue === 'Datamodel'" disabled selected hidden value="">Please choose which Category you want to use.</option>
+                                <option v-if="selectedValue === 'Brand'" disabled selected hidden value="">Please choose which brand you want to use.</option>
                                 <option disabled selected hidden value="">Please choose Dataoption first.</option>
                             </select>
                             <br />
